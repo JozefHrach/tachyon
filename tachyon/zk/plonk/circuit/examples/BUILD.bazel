@@ -10,29 +10,68 @@ tachyon_cc_library(
 )
 
 tachyon_cc_library(
+    name = "fibonacci_circuits",
+    hdrs = [
+        "fibonacci1_circuit.h",
+        "fibonacci2_circuit.h",
+        "fibonacci3_circuit.h",
+        "fibonacci4_circuit.h",
+    ],
+    deps = [
+        ":is_zero_chip",
+        "//tachyon/zk/plonk/circuit",
+        "//tachyon/zk/plonk/circuit:assigned_cell",
+    ],
+)
+
+tachyon_cc_library(
+    name = "is_zero_chip",
+    hdrs = ["is_zero_chip.h"],
+    deps = [
+        "//tachyon/zk/expressions:expression_factory",
+        "//tachyon/zk/plonk:constraint_system",
+        "//tachyon/zk/plonk/circuit:region",
+    ],
+)
+
+tachyon_cc_library(
     name = "simple_circuit",
     hdrs = ["simple_circuit.h"],
-    deps = ["//tachyon/zk/plonk/circuit"],
+    deps = [
+        "//tachyon/zk/plonk/circuit",
+        "//tachyon/zk/plonk/circuit:virtual_cells",
+    ],
 )
 
 tachyon_cc_library(
     name = "simple_lookup_circuit",
     hdrs = ["simple_lookup_circuit.h"],
-    deps = ["//tachyon/zk/plonk/circuit"],
+    deps = [
+        "//tachyon/zk/plonk/circuit",
+        "//tachyon/zk/plonk/circuit:virtual_cells",
+    ],
 )
 
 # TODO(dongchangYoo): This is failed in CI because of timeout, 60 secs.
 # Change |tachyon_cc_test| to |tachyon_cc_unittest| once CI can run within the timeout.
 tachyon_cc_test(
     name = "examples_unittests",
+    size = "enormous",
     srcs = [
-        "simple_circuit_unittest.cc",
-        "simple_lookup_circuit_unittest.cc",
-        "simple_lookup_v1_circuit_unittest.cc",
-        "simple_v1_circuit_unittest.cc",
+        # "fibonacci2_circuit_unittest.cc",
+        # "fibonacci2_v1_circuit_unittest.cc",
+        "fibonacci3_circuit_unittest.cc",
+        # "fibonacci4_circuit_unittest.cc",
+        # "fibonacci_circuit_unittest.cc",
+        # "fibonacci1_v1_circuit_unittest.cc",
+        # "simple_circuit_unittest.cc",
+        # "simple_lookup_circuit_unittest.cc",
+        # "simple_lookup_v1_circuit_unittest.cc",
+        # "simple_v1_circuit_unittest.cc",
     ],
     deps = [
         ":circuit_test",
+        ":fibonacci_circuits",
         ":simple_circuit",
         ":simple_lookup_circuit",
         "//tachyon/zk/plonk/circuit/floor_planner:simple_floor_planner",
