@@ -72,7 +72,7 @@ pub fn create_proof<'params, W: Write, ConcreteCircuit: Circuit<Fr>>(
                 .map(|values| {
                     let mut poly = domain.empty_lagrange();
                     assert_eq!(poly.len(), prover.n() as usize);
-                    if values.len() > (poly.len() - (pk.blinding_factors() + 1)) {
+                    if values.len() > (poly.len() - ((pk.blinding_factors() as usize) + 1)) {
                         return Err(Error::InstanceTooLarge);
                     }
                     for (poly, value) in poly.iter_mut().zip(values.iter()) {
@@ -267,7 +267,7 @@ pub fn create_proof<'params, W: Write, ConcreteCircuit: Circuit<Fr>>(
             vec![vec![domain.empty_lagrange_assigned(); num_advice_columns]; instances.len()];
         let mut challenges = HashMap::<usize, Fr>::with_capacity(num_challenges);
 
-        let unusable_rows_start = prover.n() as usize - (pk.blinding_factors() + 1);
+        let unusable_rows_start = prover.n() as usize - ((pk.blinding_factors() as usize) + 1);
         for current_phase in pk.phases() {
             let column_indices = meta
                 .advice_column_phase
